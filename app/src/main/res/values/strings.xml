@@ -12,4 +12,7 @@
     <string name="hint_email">E-mail</string>
     <string name="hint_password">Senha</string>
     <string name="login">Login</string>
+    <string name="error_empty_email">O email está vazio</string>
+    <string name="error_empty_password">A senha está vazia</string>
+    <string name="error_invalid_password">Senha inválida</string>
 </resources>
