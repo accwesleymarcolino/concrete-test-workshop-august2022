@@ -1,5 +1,6 @@
 package br.com.concrete.testworkshop
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -33,11 +34,11 @@ class LoginActivity : AppCompatActivity() {
                     R.string.error_empty_password
                 )
 
-                passwordValidator.isValid(binding.password.text.toString()) -> showErrorMessage(
+                !passwordValidator.isValid(binding.password.text.toString()) -> showErrorMessage(
                     R.string.error_invalid_password
                 )
 
-                else -> TODO()
+                else -> startActivity(Intent(this, HomeActivity::class.java))
             }
         }
     }
