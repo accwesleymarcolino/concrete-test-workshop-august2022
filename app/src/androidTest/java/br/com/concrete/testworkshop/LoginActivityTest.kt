@@ -42,81 +42,67 @@ class LoginActivityTest {
 
     @Test
     fun givenInitialState_shouldHaveEmptyEmailAndPassword() {
-        // Arrange
-
-        // Act
-
-        // Assert
-        onView(withId(R.id.email))
-            .check(matches(withText("")))
-        onView(withId(R.id.password))
-            .check(matches(withText("")))
+        loginAssert {
+            fieldIsEmpty(R.id.email)
+            fieldIsEmpty(R.id.password)
+        }
     }
 
     @Test
     fun givenEmptyEmail_whenLogin_shouldShowEmptyEmailError() {
-        // Arrange
+        loginAct {
+            typePassword(validPassword)
+            clickLogin()
+        }
 
-        // Act
-        onView(withId(R.id.password))
-            .perform(typeText(validPassword))
-        onView(withId(R.id.buttonLogin))
-            .perform(click())
-
-        // Assert
-        onView(withText(R.string.error_empty_email))
-            .check(matches(isDisplayed()))
+        loginAssert {
+            textIsShownToTheUser(R.string.error_empty_email)
+        }
     }
 
     @Test
     fun givenEmptyPassword_whenLogin_shouldShowEmptyPasswordError() {
-        // Arrange
+        loginAct {
+            typeEmail(validEmail)
 
-        // Act
-        onView(withId(R.id.email))
-            .perform(typeText(validEmail))
-        onView(withId(R.id.buttonLogin))
-            .perform(click())
+            clickLogin()
+        }
 
-        // Assert
-        onView(withText(R.string.error_empty_password))
-            .check(matches(isDisplayed()))
+        loginAssert {
+            textIsShownToTheUser(R.string.error_empty_password)
+        }
     }
 
     @Test
     fun givenInvalidPassword_whenLogin_shouldShowInvalidPasswordErrorMessage() {
-        // Arrange
+        loginAct {
+            typeEmail(validEmail)
+            typePassword(invalidPassword)
 
-        // Act
-        onView(withId(R.id.email))
-            .perform(typeText(validEmail))
-        onView(withId(R.id.password))
-            .perform(typeText(invalidPassword))
-        onView(withId(R.id.buttonLogin))
-            .perform(click())
+            clickLogin()
+        }
 
-        // Assert
-        onView(withText(R.string.error_invalid_password))
-            .check(matches(isDisplayed()))
+        loginAssert {
+            textIsShownToTheUser(R.string.error_invalid_password)
+        }
     }
-
 
     @Test
     fun givenValidEmailAndPassword_whenLogin_shouldGoToHomescreen() {
-        // Arrange
-        intending(hasComponent(HomeActivity::class.java.name))
-            .respondWith(ActivityResult(Activity.RESULT_CANCELED, null))
+        loginArrange {
+            mockHomeActivityResponse()
+        }
 
-        // Act
-        onView(withId(R.id.email))
-            .perform(typeText(validEmail))
-        onView(withId(R.id.password))
-            .perform(typeText(validPassword))
-        onView(withId(R.id.buttonLogin))
-            .perform(click())
+        loginAct {
+            typeEmail(validEmail)
+            typePassword(validPassword)
 
-        // Assert
-        intended(hasComponent(HomeActivity::class.java.name))
+            clickLogin()
+        }
+
+        loginAssert {
+            homeActivityWasCalled()
+        }
     }
 
 }
